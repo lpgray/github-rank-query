@@ -1,0 +1,14 @@
+{
+  "name": "github-rank-query",
+  "version": "1.0.0",
+  "description": "query user github rank by location.",
+  "main": "index.js",
+  "author": "zhangyang",
+  "email": "px.zhangyang@gmail.com",
+  "devDependencies": {
+    "request": "~2.69.0"
+  },
+  "scripts": {
+    "default": "node --use_strict --harmony -harmony_destructuring index.js"
+  }
+}
