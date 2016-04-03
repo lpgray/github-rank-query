@@ -9,7 +9,7 @@ $ git clone git@github.com:lpgray/github-rank-query.git
 
 $ npm install
 
-$ node run default --location hangzhou
+$ npm run default user=YOURNAME location=LOCATION
 ```
 
 You will be get your rank soon.

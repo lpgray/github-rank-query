@@ -2,8 +2,6 @@
 
 /*
  * 查询 github 排名
- *
- * node index.js --keyword yourname --location hangzhou
  */
 
 let request = require('request')
@@ -22,7 +20,7 @@ let options = {
 
 function doRequest(option, callback) {
   let params = []
-  let {language, location, keyword, repos} = option
+  let {language, location, user, repos} = option
 
   if (language) {
     params.push(`language:${language}`)
@@ -38,7 +36,7 @@ function doRequest(option, callback) {
 
   options.qs.q = params.join(' ')
 
-  console.log(options.qs.q)
+  // console.log(`The query parameters is ${options.qs.q}`)
 
   request
     .get(options, (err, resp, body) => {
@@ -53,7 +51,7 @@ function doRequest(option, callback) {
       let rank = 0
       for (let i = 0; i<l ; i++) {
         let item = body.items[i]
-        if (item.login === keyword) {
+        if (item.login === user) {
           rank = i + 1
           // data found
           callback(0, body, rank + options.qs.per_page * (options.qs.page - 1))
@@ -73,7 +71,7 @@ function doRequest(option, callback) {
 }
 
 function main(option) {
-  console.log(`Searching page ${options.qs.page}...`)
+  console.log(`Searching page ${options.qs.page}, per_page is ${options.qs.per_page}, location is ${option.location}.`)
   doRequest(option, (err, body, rank) => {
     switch (err) {
       case 1:
@@ -86,18 +84,38 @@ function main(option) {
         }
         break
       case -2:
-        console.log(`${option.keyword} is Not Found!`)
+        console.log(`${option.user} is Not Found!`)
         break
       default:
-        console.log(`${option.keyword}'s rank is ${rank}`)
+        console.log(`${option.user}'s rank is ${rank}`)
         break
     }
   })
 }
 
-main({
-  keyword: 'lpgray',
-  location: 'hangzhou',
-  language: 'javascript',
-  repos: '>10'
+function detectParams(nameArr, params) {
+  let res = true
+
+  nameArr.forEach(function(name) {
+    if (!params.hasOwnProperty(name)) {
+      res = false
+      console.log('ERROR!', `You did not provide a ${name} parameter.`)
+      return
+    }
+  })
+
+  return res
+}
+
+let params = {}
+process.argv.forEach(function(item){
+  if (item.indexOf('=') > -1) {
+    let arr = item.split('=')
+    params[arr[0]] = arr[1]
+  }
 })
+
+if (detectParams(['user', 'location'], params)) {
+  console.log(`Searching ${params.user}'s rank in ${params.location}...'`)
+  main(params)
+}
