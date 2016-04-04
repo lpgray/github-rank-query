@@ -12,7 +12,7 @@ $ npm install
 $ npm run default user=YOUR_GITHUB_ACCOUNT_NAME location=LOCATION
 ```
 
-### example
+## Example
 
 ```javascript
 $ npm run default user=lpgray location=hangzhou
